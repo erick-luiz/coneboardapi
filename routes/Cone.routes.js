@@ -10,7 +10,7 @@ router.get("/test", coneController.test)
 //router.put("/:id/update", productController.update)
 
 router.use((req, res, err) => {
-    console.log("Deu pau mano !")
+    console.log("Errors")
     res.send('error :/')
 })
 
