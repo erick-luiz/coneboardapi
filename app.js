@@ -18,5 +18,5 @@ app.use(bodyParser.urlencoded({extended:false}))
 // Rotas 
 app.use('/Cone', Cone)
 
-let port = 3000
+let port = process.env.PORT || 8080
 app.listen(port, () => {console.log('Listen port:', port)})
