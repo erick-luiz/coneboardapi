@@ -18,6 +18,7 @@ exports.create = (req, res, next) => {
        res.send(cone) 
     })
 }
-exports.test = (req, res, next) => {
-    res.send(global.dburl) 
+exports.test = (req, res) => {
+    
+    res.send("Teste da API") 
 }

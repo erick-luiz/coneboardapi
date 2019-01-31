@@ -4,7 +4,7 @@ const router = express.Router()
 const coneController = require("../controllers/Cone.controller")
 
 router.post("/create", coneController.create)
-router.post("/test", coneController.test)
+router.get("/test", coneController.test)
 //router.get("/:id", productController.findProduct)
 //router.delete("/:id/delete", productController.remove)
 //router.put("/:id/update", productController.update)
