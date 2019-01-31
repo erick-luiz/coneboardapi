@@ -15,10 +15,11 @@ exports.create = (req, res, next) => {
 
     cone.save((error, cone)=>{
        if(error) return next(error)
+       res.status(200)
        res.send(cone) 
     })
 }
 exports.test = (req, res) => {
     
-    res.send("Teste da API") 
+    res.send("Teste da API" + process.env.chave) 
 }
