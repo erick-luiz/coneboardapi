@@ -12,7 +12,7 @@ app = express()
 app.use(cors())
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({extended:false}))
-//app.use(bodyParser.json)
+app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
@@ -22,6 +22,7 @@ const Cone = require('./routes/Cone.routes')
 require('./models/Users')
 require('./config/passport')
 require('./routes')
+//require('./routes/temp/temp')
 
 // Banco de dados 
 let dev_db_url = "mongodb://1:2@ds143603.mlab.com:43603/dbconeboard"
@@ -32,6 +33,8 @@ mongoose.Promise = global.Promise
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'Mongo Connect error:'))
 app.use('/Cone', Cone)
+app.use('/temp', require('./routes/temp'))
+
 
 
 app.use((req, res, err) => {
