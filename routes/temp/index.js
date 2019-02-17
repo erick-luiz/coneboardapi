@@ -4,7 +4,7 @@ const fs = require('fs')
 
 router.get("/fixedCones", (req, res) => {
     let data = require(__dirname + '/data3.json')
-    res.send(data.cones) 
+    res.send(data) 
 });
 
 router.post("/addPoint", (req, res) => {
