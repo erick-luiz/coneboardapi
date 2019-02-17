@@ -12,23 +12,19 @@ router.post("/addPoint", (req, res) => {
     let data = require('./data.json')
 
     const {apelido} = body
-
-    cones = getCone(data, apelido) 
+ 
+    cones = getCone(data, apelido)
     cone = cones[0]
-
+    
     const {conisse} = body
     addConisse(cone, conisse)
-
+    res.send(conisse)
     data.cones.forEach(cone => {
         if(cone.apelido == apelido){
             addConisse(cone, conisse)
         }
     });
-    data.cones[0].apelido = "conerick"
-    fs.writeFile('./data2.json',data, (err) => {
-        if(err) console.log("lalalal")
-    })
-
+    
     registerData(data)
     res.send(cone)
 });
