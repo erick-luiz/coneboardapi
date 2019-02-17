@@ -4,7 +4,13 @@ const router = express.Router()
 const coneController = require("../controllers/Cone.controller")
 
 router.post("/create", coneController.create)
-router.get("/test", coneController.test)
+router.post("/:nikename/addPoint", coneController.addPoint)
+router.get("/:id", coneController.getCone)
+router.get("/test", (req, res) => {
+    
+    res.send("Teste da API" + process.env.chave) 
+});
+
 //router.get("/:id", productController.findProduct)
 //router.delete("/:id/delete", productController.remove)
 //router.put("/:id/update", productController.update)

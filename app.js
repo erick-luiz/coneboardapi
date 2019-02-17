@@ -25,7 +25,8 @@ require('./routes')
 //require('./routes/temp/temp')
 
 // Banco de dados 
-let dev_db_url = "mongodb://1:2@ds143603.mlab.com:43603/dbconeboard"
+require('./config/db.config')
+let dev_db_url = "mongodb://" + dbuser + ":" + dbpassword + "@" + dbhost+"/" + dbname
 let mongodb = process.env.MONGODB_URI || dev_db_url
 mongoose.connect(mongodb)
 mongoose.Promise = global.Promise
