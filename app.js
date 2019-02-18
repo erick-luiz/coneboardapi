@@ -25,7 +25,7 @@ require('./routes')
 //require('./routes/temp/temp')
 
 // Banco de dados 
-require('./config/db.config')
+require('./config/db.config.local')
 let dev_db_url = "mongodb://" + dbuser + ":" + dbpassword + "@" + dbhost+"/" + dbname
 let mongodb = process.env.MONGODB_URI || dev_db_url
 mongoose.connect(mongodb)

@@ -61,6 +61,13 @@ exports.getCone = (req, res) => {
 
 }
 
+exports.getAll = (req, res) => {
+    
+    Cone.find({}, (err, cones) => {
+        res.send({"cones":cones})
+    });
+}
+
 exports.remove = (req, res) => {
     
     // res.send("Teste da API" + process.env.chave) 
