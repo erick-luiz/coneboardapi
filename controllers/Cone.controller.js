@@ -43,7 +43,8 @@ exports.addPoint = (req, res, next) => {
     let key = req.body.key
     
     if(key != secretKey){
-        res.status(500).json({
+        res.status(500)
+        .json({
             error: 500, 
             message: "Chave de registro invalida!"
         }).send()
@@ -63,21 +64,27 @@ exports.addPoint = (req, res, next) => {
 
 
         Cone.findOne({ nickname: nk}, function (err, cone) {
-            if(!cone) res.status(500).json({
-                error: 500, 
-                message: "Cone não encontrado para adicionar o ponto!"
-            }).send()
-
-            if(!cone.points) cone.points = [] 
-            cone.points.push(pt)
-
-            Cone.update({ nickname: nk}, {$set:cone}, function (err, cone) {
-                if(err) res.status(500).json({
+            if(!cone){
+                res.status(500)
+                .json({
                     error: 500, 
-                    message: "Erro ao atualizar a pontuação"
+                    message: "Cone não encontrado para adicionar o ponto!"
                 }).send()
-                res.status(200).send("Operação realizada com suceeso")
-            })
+            }else{
+                if(!cone.points) cone.points = [] 
+                cone.points.push(pt)
+    
+                Cone.update({ nickname: nk}, {$set:cone}, function (err, cone) {
+                    if(err){
+                        res.status(500).json({
+                            error: 500, 
+                            message: "Erro ao atualizar a pontuacao"
+                        }).send()
+                    }
+                    res.status(200).json({"sucess":"operação realizada com sucesso ;)"}).send()
+                })
+            }
+
         });
     }
 }
