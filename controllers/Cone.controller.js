@@ -1,10 +1,25 @@
 const Cone = require('../models/Cone')
 
+if(process.env.isPrd) {
+    require('../config/keys.config')
+}else{
+    require('../config/keys.config.local')
+}
+
 exports.create = (req, res, next) => {
 
-    let name     = req.body.name
-    let nickname = req.body.nickname
-    let img      = req.body.img
+    let key = req.body.key
+    if(key != secretKey){
+        res.status(500).send({
+            error: 500, 
+            message: "Chave de registro invalida!"
+        })
+        return;
+    }
+
+    let name     = req.body.data.name
+    let nickname = req.body.data.nickname
+    let img      = req.body.data.img
 
     let cone = new Cone({
         name: name, 
@@ -14,48 +29,68 @@ exports.create = (req, res, next) => {
     })
 
     cone.save((err, cone)=>{
-       if(err) res.status(500).send("error: nikename do cone já cadastrado :/ ")
+        if(err) res.status(500).send({
+            error: 500, 
+            message: "nikename do cone já cadastrado :/!"
+        })
+
        res.status(200).send(cone) 
     })
 }
 
 exports.addPoint = (req, res, next) => {
 
-    let nk = req.params.nikename
-
-    let {data, titulo, descricao, estrelado} = req.body
-
-    let pt = {
-        title: titulo,
-        description: descricao, 
-        date: data, 
-        star: estrelado 
-    };
-
-
-    Cone.findOne({ nickname: nk}, function (err, cone) {
-        if(!cone) res.send("Cone não encontrado para adicionar o potno")
-
-        if(!cone.points) cone.points = [] 
-        cone.points.push(pt)
-
-        Cone.update({ nickname: nk}, {$set:cone}, function (err, cone) {
-            if(err) res.status(500).send("Erro ao atualizar a pontuação");
-            res.send(cone)
-        })
-    });
-}
-
-exports.tesat = (req, res) => {
+    let key = req.body.key
     
-    res.send("Teste da API" + process.env.chave) 
+    if(key != secretKey){
+        res.status(500).json({
+            error: 500, 
+            message: "Chave de registro invalida!"
+        }).send()
+    }else{
+
+        
+        let nk = req.params.nikename
+        
+        let {data, titulo, descricao, estrelado} = req.body.data
+        
+        let pt = {
+            title: titulo,
+            description: descricao, 
+            date: data, 
+            star: estrelado 
+        };
+
+
+        Cone.findOne({ nickname: nk}, function (err, cone) {
+            if(!cone) res.status(500).json({
+                error: 500, 
+                message: "Cone não encontrado para adicionar o ponto!"
+            }).send()
+
+            if(!cone.points) cone.points = [] 
+            cone.points.push(pt)
+
+            Cone.update({ nickname: nk}, {$set:cone}, function (err, cone) {
+                if(err) res.status(500).json({
+                    error: 500, 
+                    message: "Erro ao atualizar a pontuação"
+                }).send()
+                res.status(200).send("Operação realizada com suceeso")
+            })
+        });
+    }
 }
+
 exports.getCone = (req, res) => { 
 
-    let id = req.params.id
+    let nk = req.params.nk
 
-    Cone.findOne({ nickname: 'ericone'}, function (err, cone) {
-        if(!cone) res.send("Cone não encontrado")
+    Cone.findOne({ nickname: nk}, function (err, cone) {
+        if(!cone) res.status(500).json({
+            error: 500, 
+            message: "Cone não encontrado"
+        }).send()
         res.send(cone)
     });
 

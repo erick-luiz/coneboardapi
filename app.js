@@ -22,7 +22,6 @@ const Cone = require('./routes/Cone.routes')
 require('./models/Users')
 require('./config/passport')
 require('./routes')
-//require('./routes/temp/temp')
 
 // Banco de dados
 if(process.env.isPrd) {
@@ -38,21 +37,6 @@ mongoose.Promise = global.Promise
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'Mongo Connect error:'))
 app.use('/Cone', Cone)
-app.use('/temp', require('./routes/temp'))
-
-
-
-app.use((req, res, err) => {
-    res.status(err.status || 500)
-    res.json(
-        {
-            erros:{
-                message: err.message, 
-                erros:{}
-            }
-        }
-    )
-})
 
 let port = process.env.PORT || 8080
 app.listen(port, () => {console.log('Listen port:', port)})
