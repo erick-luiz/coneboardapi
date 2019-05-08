@@ -1,4 +1,5 @@
 const Cone = require('../models/Cone')
+const WM = require('../models/WinnerMonth')
 
 if(process.env.isPrd) {
     require('../config/keys.config')
@@ -120,44 +121,56 @@ exports.update = (req, res) => {
     // res.send("Teste da API" + process.env.chave) 
 }
 
-/*
-const Product = require('../models/Product')
+exports.addWinnerMonth = (req, res, next) => {
 
-exports.create = function(req, res, next) {
-    console.log('aqui')
-    let product = new Product({
-        name: req.body.name, 
-        price: req.body.price
-    })
+    let key = req.body.key
 
-    product.save((error, prod)=>{
-       if(error) return next(error)
-       res.send(prod) 
-    })
+    if(key != secretKey){
+        res.status(500)
+        .json({
+            error: 500, 
+            message: "Chave de registro invalida!"
+        }).send()
+    }else{
+
+        let {month, year, points, nk} = req.body.data
+        
+        let winnerMonth = new WM({
+            dateMonth: parseInt(month),
+            dateYear: parseInt(year), 
+            points: parseInt(points),
+            cones: [] 
+        });
+
+
+        Cone.findOne({ nickname: nk}, function (err, cone) {
+            if(!cone){
+                res.status(500)
+                .json({
+                    error: 500, 
+                    message: "Cone não encontrado para cadastrar como vencedor!"
+                }).send()
+            }else{
+
+                winnerMonth.cones.push(cone);
+                
+                winnerMonth.save(function(err, winnerMonth) {
+                    if(err) res.status(500).send({
+                        error: 500, 
+                        message: "Problema ao cadastrar o vencedor do mês :/!"
+                    })
+            
+                   res.status(200).send(winnerMonth) 
+                })
+            }
+
+        });
+    }
 }
 
-exports.findProduct = function(req, res, next) {
-    Product.findById(req.params.id, function(err, product){
-        if(err){
-            next()
-            //res.send('error :/')
-        }
-        res.send(product)
-    })
-}
+exports.getAllWinner = (req, res) => {
 
-exports.update = function(req, res, next) {
-    Product.findByIdAndUpdate(req.params.id, {$set: req.body}, (err, prod) =>{
-        console.log(req.params.id)
-        if(err) return next(err)
-        res.send("Produto atualizado com sucesso!")
-    })
+    WM.find({}, (err, winnersMonth) => {
+        res.send({"winnersCones": winnersMonth})
+    });
 }
-
-exports.remove = function(req, res, next) {
-    Product.findByIdAndDelete(req.param.id, (err, prod) => {
-        if(err) next()
-        res.send('Produto removido com sucesso!')
-    })
-}  
-*/

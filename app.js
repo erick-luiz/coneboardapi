@@ -17,11 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
 
-// Rotas e Modelos 
-const Cone = require('./routes/Cone.routes')
-require('./models/Users')
-require('./config/passport')
-require('./routes')
 
 // Banco de dados
 if(process.env.isPrd) {
@@ -36,7 +31,18 @@ mongoose.Promise = global.Promise
 
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'Mongo Connect error:'))
+
+// Rotas e Modelos 
+const Cone = require('./routes/Cone.routes')
+
+require('./models/models.require')
+require('./config/passport')
+
 app.use('/Cone', Cone)
+app.use(require('./routes'))
+
+require('./Schedule/startSchedules')
+
 
 let port = process.env.PORT || 8080
 app.listen(port, () => {console.log('Listen port:', port)})

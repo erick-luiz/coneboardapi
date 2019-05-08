@@ -6,21 +6,23 @@ const {Schema} = mongoose
 
 const UserSchema = new Schema(
     {
-        name: String, 
-        nickName: String,
-        email: String, 
+        name: {type: String, require: true, max:30}, 
+        nickName: {type: String, require: true, max:30},
+        email: {type: String, require: true, max:100, unique: true}, 
         hash: String, 
-        salt: String
+        salt: String,
+        img: String, 
+        points: [{ type: Schema.Types.ObjectId, ref: 'Point' }]
     }
 )
 
 UserSchema.methods.setPassword = function(password){
     this.salt = crypto.randomBytes(16).toString('hex')
-    this.hash = crypto.pbkdf2(password, this.salt, 10000, 512,'sha512').toString('hex')
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512,'sha512').toString('hex')
 }
 
 UserSchema.methods.validade = function(password){
-    const hash = crypto.pbkdf2(password, this.salt, 10000, 512,'sha512').toString('hex')
+    const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512,'sha512').toString('hex')
     return this.hash == hash
 }
 
