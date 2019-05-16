@@ -4,7 +4,6 @@ const passport = require('passport')
 const auth = require('../auth')
 const User = mongoose.model('Users')
 
-// Serviço de cadastro de usuário
 router.post('/', auth.optional, (req, res, err) => {
 
     const {body : {user}} = req
@@ -43,6 +42,8 @@ router.post('/login', auth.optional, (req, res, next) => {
     if(!user.email) requeridFields.push('email')
     if(!user.password) requeridFields.push('password')
     
+    console.log(user.password);
+
     if(requeridFields.length > 0) {
         return res.status(422).json({ errors:{ requeridFields: requeridFields } }) 
     }

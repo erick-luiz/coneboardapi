@@ -18,6 +18,7 @@ router.get('/boards', auth.require, (req, res, net) => {
 })
 
 router.post('/', auth.require, (req, res, net) => {
+    
     const {payload : {id}} = req
     const {body : {board}} = req
 
